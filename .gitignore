@@ -1,0 +1,23 @@
+# Виртуальные машины и образы
+*.iso
+*.vmdk
+*.vmx
+*.vmsd
+*.nvram
+*.vmem
+
+# Секреты — не коммитим никогда
+secrets.txt
+*.pfx
+*.key
+credentials*
+
+# Сырые выводы и логи
+*.log
+transcript*.txt
+stage*.txt
+
+# Мусор ОС и редакторов
+Thumbs.db
+desktop.ini
+.vscode/
