@@ -88,6 +88,15 @@ The AD-integrated forward lookup zone for `lab.local` was created automatically.
 
 \## Problems encountered
 
+### AD cmdlets missing after role installation
+
+**Symptom.** After installing the AD DS role, `Get-ADDomain` was not recognised as a command.
+
+**Root cause.** The role was installed without `-IncludeManagementTools`, so the `RSAT-AD-PowerShell` module was never installed. On Server Core nothing extra ships by default — the role runs, but there are no cmdlets to manage it.
+
+**Resolution.** Rolled back to the pre-installation snapshot and reinstalled the role with `-IncludeManagementTools`.
+
+**Takeaway.** Snapshots before every irreversible step. Rolling back took two minutes; rebuilding the VM would have taken an hour.
 
 
 \## What I learned
