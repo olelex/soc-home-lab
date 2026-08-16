@@ -16,6 +16,7 @@ credentials*
 *.log
 transcript*.txt
 stage*.txt
+history*.txt
 
 # Мусор ОС и редакторов
 Thumbs.db
