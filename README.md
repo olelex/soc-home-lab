@@ -24,13 +24,13 @@ The Domain Controller provides the realistic enterprise context. Active Director
 
 ## Stages
 
-|  # | Stage                                             | Status         |
-| -: | ------------------------------------------------- | -------------- |
+|  # | Stage | Status |
+| -: | --- | --- |
 |  1 | [Active Directory Domain Controller on Server Core](docs/01-domain-controller.md) | ✅ Done |
-|  2 | Windows 11 client and domain join                 | ✅ Done |
-|  3 | Sysmon telemetry on the client                    | ✅ Done      |
-|  4 | Wazuh SIEM and agents on DC01 and CLIENT01        | 🔄 In Progress      |
-|  5 | Attack simulation and detection rules             | ⏳ Planned      |
+|  2 | [Windows 11 client and domain join](docs/02-domain-join.md) | ✅ Done |
+|  3 | [Sysmon telemetry on the client](docs/03-sysmon.md) | ✅ Done |
+|  4 | Wazuh SIEM and agents on DC01 and CLIENT01 | 🔄 In Progress |
+|  5 | Attack simulation and detection rules | ⏳ Planned |
 
 Documentation for each stage lives in `/docs`.
 
