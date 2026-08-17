@@ -30,7 +30,7 @@ The Domain Controller provides the realistic enterprise context. Active Director
 |  2 | [Windows 11 client and domain join](docs/02-domain-join.md) | ✅ Done |
 |  3 | [Sysmon telemetry on the client](docs/03-sysmon.md) | ✅ Done |
 | 4 | [Wazuh SIEM and agent deployment](docs/04-wazuh-siem.md) | ✅ Done |
-|  5 | Attack simulation and detection rules | ⏳ Planned |
+| 5 | [Detection testing with Atomic Red Team](docs/05-detection-testing.md) | ✅ Done |
 
 Documentation for each stage lives in `/docs`.
 
