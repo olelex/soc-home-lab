@@ -1,16 +1,16 @@
-\# Stage 5 — Detection Testing with Atomic Red Team
+# Stage 5 — Detection Testing with Atomic Red Team
 
 
 
-\## Goal
+## Goal
 
 
 
-Atomic Red Team replaces commands I invented myself with a catalogue of real techniques, each mapped to MITRE ATT\&CK and reproduced in a safe form. These are the same actions used in actual intrusions and the same techniques a SOC analyst deals with daily, which makes them the right thing to practise against — a detection that only catches the attacks I imagined proves very little.
+Atomic Red Team replaces commands I invented myself with a catalogue of real techniques, each mapped to MITRE ATT&CK and reproduced in a safe form. These are the same actions used in actual intrusions and the same techniques a SOC analyst deals with daily, which makes them the right thing to practise against — a detection that only catches the attacks I imagined proves very little.
 
 
 
-\## Environment
+## Environment
 
 
 
@@ -24,7 +24,7 @@ Atomic Red Team replaces commands I invented myself with a catalogue of real tec
 
 
 
-\## Method
+## Method
 
 
 
@@ -32,7 +32,7 @@ Each test followed the same sequence: read what the test does with `-ShowDetails
 
 
 
-!\[Atomic test execution with prerequisites, timestamp and cleanup](../img/05-01-atomic-test-run.png)
+![Atomic test execution with prerequisites, timestamp and cleanup](../img/05-01-atomic-test-run.png)
 
 
 
@@ -44,7 +44,7 @@ Tests were run only on CLIENT01. The domain controller was deliberately left out
 
 
 
-\## Results
+## Results
 
 
 
@@ -61,15 +61,15 @@ Encoded PowerShell executed by the atomic test, captured with the full command l
 
 
 
-!\[PowerShell process created by the atomic test](../img/05-02-powershell-atomic.png)
+![PowerShell process created by the atomic test](../img/05-02-powershell-atomic.png)
 
 
 
-The level 15 alert that turned out to be a false positive — note `ruleName: technique\_id=T1059.001` and the target filename `\_\_PSScriptPolicyTest\_\*.ps1`:
+The level 15 alert that turned out to be a false positive — note `ruleName: technique_id=T1059.001` and the target filename `__PSScriptPolicyTest_*.ps1`:
 
 
 
-!\[False positive on rule 92213](../img/05-03-false-positive-92213.png)
+![False positive on rule 92213](../img/05-03-false-positive-92213.png)
 
 
 
@@ -77,7 +77,7 @@ Scheduled task creation captured as a full chain, ending in `SCHTASKS /Create`:
 
 
 
-!\[Scheduled task creation event](../img/05-04-scheduled-task-event.png)
+![Scheduled task creation event](../img/05-04-scheduled-task-event.png)
 
 
 
@@ -85,7 +85,7 @@ Account enumeration reaching the SIEM as `net1.exe` — the internal call first 
 
 
 
-!\[net1.exe process event](../img/05-05-net1-user.png)
+![net1.exe process event](../img/05-05-net1-user.png)
 
 
 
@@ -93,51 +93,51 @@ Local accounts verified manually after cleanup:
 
 
 
-!\[Local account check after cleanup](../img/05-06-cleanup-check.png)
+![Local account check after cleanup](../img/05-06-cleanup-check.png)
 
 
 
-\## Detection notes
+## Detection notes
 
 
 
-\*\*False positive on rule 92213.\*\* This rule did not fire because something malicious was inside the file — it fired because a file appeared in the Temp directory. That directory is used by malware and by ordinary legitimate software alike. In my case the file was created by PowerShell itself as part of its own script policy check: normal behaviour, not an attack. The weakness is that the rule looks at where a file was written rather than what it contains, which makes it fire on harmless activity — and this one is level 15, the highest severity. Alerts like this are how analysts learn to ignore their own tooling.
+**False positive on rule 92213.** This rule did not fire because something malicious was inside the file — it fired because a file appeared in the Temp directory. That directory is used by malware and by ordinary legitimate software alike. In my case the file was created by PowerShell itself as part of its own script policy check: normal behaviour, not an attack. The weakness is that the rule looks at where a file was written rather than what it contains, which makes it fire on harmless activity — and this one is level 15, the highest severity. Alerts like this are how analysts learn to ignore their own tooling.
 
 
 
-\*\*Why T1136.001 is "N/A" rather than "No".\*\* "No" would mean the attack happened and the SIEM missed it. That is not what occurred here: Windows itself refused to create the account because the password did not meet the policy, so there was no attack to detect. The SIEM missed nothing — there was simply nothing to see. These are two different outcomes and they call for two different responses, so recording them under the same word would hide the distinction.
+**Why T1136.001 is "N/A" rather than "No".** "No" would mean the attack happened and the SIEM missed it. That is not what occurred here: Windows itself refused to create the account because the password did not meet the policy, so there was no attack to detect. The SIEM missed nothing — there was simply nothing to see. These are two different outcomes and they call for two different responses, so recording them under the same word would hide the distinction.
 
 
 
-\*\*Why level 3 on discovery is a coverage problem.\*\* The SIEM did see `net user` and `net localgroup`, but assigned them the lowest severity. In a production environment level 3 events arrive constantly — routine logons, ordinary process starts — and no analyst can review each one by hand. So even when something is technically detected, in practice nobody notices it among thousands of similar low-priority events. Being seen is not the same as being noticed.
+**Why level 3 on discovery is a coverage problem.** The SIEM did see `net user` and `net localgroup`, but assigned them the lowest severity. In a production environment level 3 events arrive constantly — routine logons, ordinary process starts — and no analyst can review each one by hand. So even when something is technically detected, in practice nobody notices it among thousands of similar low-priority events. Being seen is not the same as being noticed.
 
 
 
-\## Problems encountered
+## Problems encountered
 
 
 
-\### Cleanup did not fully verify itself
+### Cleanup did not fully verify itself
 
 
 
-\*\*Symptom.\*\* I assumed `-Cleanup` reliably removes everything a test creates. After T1136.001 (create local account) I could not actually be sure the account was gone until I checked manually with `Get-LocalUser`.
+**Symptom.** I assumed `-Cleanup` reliably removes everything a test creates. After T1136.001 (create local account) I could not actually be sure the account was gone until I checked manually with `Get-LocalUser`.
 
 
 
-\*\*Root cause.\*\* "Done executing cleanup" reports that the cleanup command ran, not that the system is back to its previous state.
+**Root cause.** "Done executing cleanup" reports that the cleanup command ran, not that the system is back to its previous state.
 
 
 
-\*\*Resolution.\*\* Verified the result separately after each test — local accounts with `Get-LocalUser`, scheduled tasks with `Get-ScheduledTask`. Everything was clean this time.
+**Resolution.** Verified the result separately after each test — local accounts with `Get-LocalUser`, scheduled tasks with `Get-ScheduledTask`. Everything was clean this time.
 
 
 
-\*\*Takeaway.\*\* Confirmation that a command executed is not confirmation that it worked. Without a separate check, test artefacts — extra users, tasks, files — accumulate in the lab unnoticed.
+**Takeaway.** Confirmation that a command executed is not confirmation that it worked. Without a separate check, test artefacts — extra users, tasks, files — accumulate in the lab unnoticed.
 
 
 
-\## What I learned
+## What I learned
 
 
 
@@ -153,13 +153,13 @@ And not everything that looks like a detection gap is one. When T1136.001 produc
 
 
 
-\## Next steps
+## Next steps
 
 
 
-\- Re-run T1136.001 with a password that satisfies the domain policy, to replace the N/A with a real Yes or No.
+- Re-run T1136.001 with a password that satisfies the domain policy, to replace the N/A with a real Yes or No.
 
-\- Tune rule 92213 by excluding the known `\_\_PSScriptPolicyTest\_\*.ps1` artefact, rather than disabling the rule and losing the signal along with the noise.
+- Tune rule 92213 by excluding the known `__PSScriptPolicyTest_*.ps1` artefact, rather than disabling the rule and losing the signal along with the noise.
 
-\- Build a correlation rule for discovery activity: several reconnaissance commands from one process within a short window, instead of alerting on each command at level 3.
+- Build a correlation rule for discovery activity: several reconnaissance commands from one process within a short window, instead of alerting on each command at level 3.
 
