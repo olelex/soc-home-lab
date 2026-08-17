@@ -15,21 +15,13 @@ Centralised collection makes correlation possible: events from different hosts m
 
 
 | Component | Value |
-
 |---|---|
-
 | SIEM | Wazuh 4.9.2 (all-in-one) |
-
 | SIEM host OS | Ubuntu 24.04 LTS |
-
 | SIEM IP | 192.168.2.128 |
-
 | RAM | 3.8 GB |
-
 | Agent version | 4.9.0 (Windows MSI) |
-
 | Agents enrolled | 001 — CLIENT01 |
-
 | Dashboard | `https://192.168.2.128` (port 443) |
 
 
@@ -137,17 +129,11 @@ Fields that carried the most weight in the resulting alert:
 
 
 | Field | Value | Why it matters |
-
 |---|---|---|
-
 | `rule.description` | Powershell process spawned | A built-in rule fired — the event was assessed, not merely stored |
-
 | `integrityLevel` | High | Elevated process; the same command from a standard user is a different incident |
-
 | `hashes` | SHA1 / MD5 / SHA256 / IMPHASH | Ready-made IOCs for threat intelligence lookups |
-
 | `parentCommandLine` | `powershell.exe` | Expected parent for a console-launched command — this is what normal looks like |
-
 | `currentDirectory` | `C:\\WINDOWS\\system32\\` | Working directory of the process |
 
 

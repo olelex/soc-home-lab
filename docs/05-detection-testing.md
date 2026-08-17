@@ -15,17 +15,11 @@ Atomic Red Team replaces commands I invented myself with a catalogue of real tec
 
 
 | Component | Value |
-
 |---|---|
-
 | Framework | Atomic Red Team (invoke-atomicredteam) |
-
 | Atomics path | `C:\\AtomicRedTeam\\atomics` |
-
 | Executed on | CLIENT01 only |
-
 | Detection stack | Wazuh 4.9.2 + Sysmon |
-
 | Snapshot | `CLIENT01 - pre Atomic Red Team` |
 
 
@@ -55,15 +49,10 @@ Tests were run only on CLIENT01. The domain controller was deliberately left out
 
 
 | Technique | Test | Detected | Rule ID | Rule level | Notes |
-
 |---|---|---|---|---|---|
-
 | T1059.001 | Encoded PowerShell (Atomic #15) | Yes | 92027, 92213 | 4, 15 | Multiple rules fired across several sub-commands. 92213 (level 15) was a false positive — it fired on a temp file created by PowerShell's own script policy check, not an actual payload. The same core rule (92027) triggered as in the manual `-enc` test in stage 4. |
-
 | T1136.001 | Create user via cmd (Atomic #4) | N/A | — | — | The test itself failed: Windows password policy rejected the account creation, so no account was ever created. Nothing for Wazuh to detect — the OS blocked the action before it happened. |
-
 | T1053.005 | Scheduled task local (Atomic #2) | Yes | 92004, 92032, 92052, 92154 | 3–4 | Full command chain visible: PowerShell → cmd.exe → `SCHTASKS /Create`. No single high-severity rule, but strong multi-signal detection across both creation and cleanup. |
-
 | T1087.001 | Enumerate accounts (Atomic #8) | Yes | 92036, 92031, 92032 | 3 | Each `net` command triggered matching rule pairs almost simultaneously, confirming the `net.exe` → `net1.exe` internal call is still captured. All level 3 — would easily blend into noise in a busy environment. |
 
 
